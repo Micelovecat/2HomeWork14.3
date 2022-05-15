@@ -1,7 +1,6 @@
 package ru.skypro;
 
 public interface List {
-
     Integer add(Integer item);
     Integer add(int index, Integer item);
     Integer set(int index, Integer item);
