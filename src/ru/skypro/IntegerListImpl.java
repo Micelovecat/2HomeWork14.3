@@ -29,7 +29,7 @@ public class IntegerListImpl implements List{
     }
 
     private void growStorage() {
-        int newCapacity = storage.length * 2;
+        int newCapacity = (int) (storage.length * 1.5);
         storage = Arrays.copyOf(storage, newCapacity);
     }
 
@@ -96,8 +96,34 @@ public class IntegerListImpl implements List{
     public boolean contains(Integer item) {
         checkIfNull(item);
         Integer[] storageCopy = storage.clone();
-        sortSelection(storageCopy);
+        //sortSelection(storageCopy);
+        quickSort(storageCopy, 0, storageCopy.length - 1);
         return binarySearch(storageCopy, item) != -1;
+    }
+
+    private void quickSort(Integer[] storageCopy, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(storageCopy, begin, end);
+
+            quickSort(storageCopy, begin, partitionIndex - 1);
+            quickSort(storageCopy, partitionIndex - 1, end);
+        }
+    }
+
+    private int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++){
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
     }
 
     private Integer binarySearch(Integer[] array, Integer element){
@@ -114,23 +140,23 @@ public class IntegerListImpl implements List{
             if (element < array[mid]){
                 max = mid - 1;
             } else {
-                min = mid = 1;
+                min = 1;
             }
         }
         return -1;
     }
 
-    private void sortSelection(Integer[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            int minElementIndex = i;
-            for (int j = i + 1; j < arr.length; j++) {
-                if (arr[j] < arr[minElementIndex]) {
-                    minElementIndex = j;
-                }
-            }
-            swapElements(arr, i, minElementIndex);
-        }
-    }
+//    private void sortSelection(Integer[] arr) {
+//        for (int i = 0; i < arr.length - 1; i++) {
+//            int minElementIndex = i;
+//            for (int j = i + 1; j < arr.length; j++) {
+//                if (arr[j] < arr[minElementIndex]) {
+//                    minElementIndex = j;
+//                }
+//            }
+//            swapElements(arr, i, minElementIndex);
+//        }
+//    }
 
     public static void swapElements(Integer[] arr, int indexA, int indexB) {
         int tmp = arr[indexA];
